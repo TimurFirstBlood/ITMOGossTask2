@@ -26,7 +26,7 @@ app
       });
     });
   })
-  .get("/makeimage?", (r) => {
+  .get("/makeimage", (r) => {
     const width = parseInt(r.query.width);
     const height = parseInt(r.query.height);
     sharp("./img/photo-recommendation.png")
