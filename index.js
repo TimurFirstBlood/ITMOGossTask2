@@ -45,7 +45,7 @@ app
     const WPresponse = await axios.post(
       `https://wordpress.kodaktor.ru/wp-json/wp/v2/posts/`,
 
-      { content, title: "309518", status: "publish" },
+      { content, title: "timur.yalta", status: "publish" },
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -60,7 +60,7 @@ app
     r.res.render("./sha", { value: "" });
   })
   
-  .all("/login", (r) => r.res.send("309518"))
+  .all("/login", (r) => r.res.send("timur.yalta"))
   .listen(process.env.PORT || 3000, () => {
     console.log("Server is working");
   });
