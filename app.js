@@ -1,4 +1,4 @@
-export default function appScr(express, mongoose, CORS, login, bodyParser, user) {
+export default function appScr(express, mongoose, CORS, bodyParser, user) {
 	const headerText = {"Content-Type": "text/html; charset=utf-8", ...CORS};
 	const app = express();
 	app.use(bodyParser.urlencoded({extended: true}))
@@ -6,7 +6,7 @@ export default function appScr(express, mongoose, CORS, login, bodyParser, user)
 			r.res.send('itmo273328');
 		})
 		.all("/login", (r) => {
-			r.res.send(login);
+			r.res.send('itmo273328');
 		})
 		.all("/insert/", async (r) => {
 			r.res.set(headerText);

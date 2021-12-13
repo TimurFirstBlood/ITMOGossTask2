@@ -5,10 +5,10 @@ import cors from "./cors.js";
 import appScr from "./app.js";
 import bodyParser from "body-parser";
 import User from "./User.js";
-dotenv.config();
-const PORT = process.env.PORT || 5000;
+// dotenv.config();
+const PORT = process.env.PORT; // || 5000;
 const user = User(mongoose);
-const app = appScr(express, mongoose, cors, 'itmo273328', bodyParser, user);
+const app = appScr(express, mongoose, cors, bodyParser, user);
 app.listen(PORT, () => {
 	console.log("Is Working");
 });
