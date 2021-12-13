@@ -1,14 +1,15 @@
-import express from "express";
-import mongoose from "mongoose";
-import dotenv from "dotenv";
-import cors from "./cors.js";
-import appScr from "./app.js";
-import bodyParser from "body-parser";
-import User from "./User.js";
-dotenv.config();
-const PORT = process.env.PORT || 5000;
-const user = User(mongoose);
-const app = appScr(express, mongoose, cors, 'itmo273328', bodyParser, user);
-app.listen(PORT, () => {
-	console.log("Is Working");
-});
+import appSrc from './app.js';
+import fs from 'fs';
+import express from 'express';
+import bodyParser from 'body-parser';
+import m from 'mongoose';
+import crypto from 'crypto';
+import http from 'http';
+import CORS from './CORS.js';
+import UserModel from './models/User.js';
+const User = UserModel(m);
+const app = appSrc(express, bodyParser, fs, crypto, http, CORS, User, m);
+const PORT = process.env.PORT || 9000;
+app.listen(PORT, () => console.log(`Server listening on port ${PORT}!`));
+
+
