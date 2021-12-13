@@ -1,50 +1,29 @@
-export default function (express, bodyParser, createReadStream, crypto, http) {
-    const app = express()
- 
-    app.use(function (req, res, next) {
-        res.set('Access-Control-Allow-Origin', '*')
-        res.set('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,OPTIONS,DELETE')
-        res.set('Access-Control-Allow-Headers', 'x-test,Content-Type,Accept,Access-Control-Allow-Headers')
-        res.set('Charset', 'UTF-8')
-        res.set('Content-Type', 'text/plain')
-        next()
-    })
- 
-    function returnLogin(request, response) {
-        response.send('itmo273328')
-    }
- 
-    async function returnCode(request, response) {
-        const reader = createReadStream(import.meta.url.substring(7))
-        reader.setEncoding('utf8')
-        let result = ''
-        for await (const chunk of reader) result += chunk
-        response.send(result)
-    }
- 
-    function returnSha1(request, response) {
-        response.send(crypto.createHash('sha1').update(request.params.input).digest('hex'))
-    }
- 
-    function requestUrlData(req, res) {
-        const url = req.query.addr || req.body
-        let msg = ''
-        if (url)
-            http.get(url, {headers: {'Content-Type': 'text/plain'}}, response => {
-                response.setEncoding('utf8')
-                response.on('data', chunk => msg += chunk)
-                response.on('end', () => res.send(msg))
-            })
-        else
-            res.send('Не удалось получить данные по URL')
-    }
- 
-    app.get('/login/', returnLogin)
-    app.get('/code/', returnCode)
-    app.get('/sha1/:input/', returnSha1)
-    app.get('/req/', requestUrlData)
-    app.post('/req/', requestUrlData)
-    app.all('*', returnLogin)
- 
-    return app
- }
+export default function appScr(express, mongoose, CORS, login, bodyParser, user) {
+	const headerText = {"Content-Type": "text/html; charset=utf-8", ...CORS};
+	const app = express();
+	app.use(bodyParser.urlencoded({extended: true}))
+		.all("/", (r) => {
+			r.res.send('itmo273328');
+		})
+		.all("/login", (r) => {
+			r.res.send(login);
+		})
+		.all("/insert/", async (r) => {
+			r.res.set(headerText);
+			const {login, password, URL} = r.body;
+			const newUser = new user({login, password});
+			try {
+				await mongoose.connect(URL, {useNewUrlPaser: true, useUnifiedTopology: true});
+				try {
+					await newUser.save();
+					r.res.status(201).json({"Добавлено: ": login});
+				} catch (error) {
+					r.res.status(400).json({"Ошибка: ": "Нет пароля"});
+				}
+			} catch (error) {
+				console.log(error);
+			}
+		});
+
+	return app;
+}

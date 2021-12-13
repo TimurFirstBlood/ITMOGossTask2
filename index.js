@@ -1,11 +1,14 @@
-import express from 'express'
-import bodyParser from 'body-parser'
-import {createReadStream} from 'fs'
-import crypto from 'crypto'
-import http from 'http'
-
-import appSrc from './app.js'
-
-const app = appSrc(express, bodyParser, createReadStream, crypto, http)
-
-app.listen(process.env.PORT)
+import express from "express";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import cors from "./cors.js";
+import appScr from "./app.js";
+import bodyParser from "body-parser";
+import User from "./User.js";
+dotenv.config();
+const PORT = process.env.PORT || 5000;
+const user = User(mongoose);
+const app = appScr(express, mongoose, cors, 'itmo273328', bodyParser, user);
+app.listen(PORT, () => {
+	console.log("Is Working");
+});
